@@ -2,6 +2,8 @@ Project Workflow
 
 This project includes two core functionalities: Promotion AI and Customer Support AI, both integrated with a futuristic and space-themed design. Below is the detailed workflow for each functionality:
 
+
+
 1. Promotion AI Workflow
 Objective:
 
@@ -20,6 +22,9 @@ Generated Message: "Hi John! We're thrilled to offer you an exclusive 20% discou
 Output:
 The generated message is returned to the frontend and displayed in the UI.
 Optionally, the promotion can also be converted to speech and played as audio using the Text-to-Speech (TTS) feature.
+
+
+
 2. Customer Support AI Workflow
 Objective:
 
@@ -42,6 +47,10 @@ If not, the AI apologizes and asks the user to check their order ID.
 Output:
 The AI-generated response is returned to the frontend and displayed as text.
 For enhanced accessibility, the response is also converted to audio and played back to the user.
+
+
+
+
 3. General Workflow
 a. Speech-to-Text Integration (Optional):
 
