@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Support Mithi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Original Chat Interface Styles */
+        #speakButton {
+            margin-top: 10px;
+            padding: 8px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 2;
+        }
+
+        #speakButton:hover {
+            background-color: #45a049;
+        }
+
+        #responseText {
+            margin: 20px 0;
+            padding: 10px;
+            min-height: 50px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            color: white;
+            font-size: 18px;
+            z-index: 2;
+        }
+
+        /* Floating Elements */
+        .geometric-elements {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.3;
+            left: 50%;
+            top: 50%;
+            transform-origin: 0 0;
+            animation: orbit 20s linear infinite;
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(255, 50, 50, 0.5);
+        }
+
+        /* Slider Styles */
+        .overlay-container {
+            position: absolute;
+            top: calc(50% + 30px);
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: calc(100% - 4cm);
+            height: calc(100% - 4cm);
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        .overlay-slider {
+            position: relative;
+            width: 300%;
+            height: 100%;
+            display: flex;
+            transform-style: preserve-3d;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+        }
+
+        .slide {
+            position: relative;
+            width: 33.333%;
+            height: 100%;
+            padding: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(2.5px);
+            border-radius: 20px;
+        }
+
+        /* Lock Screen Styles */
+        .lock-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(2.5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            border-radius: 20px;
+            transition: all 0.4s ease;
+        }
+
+        /* Specific style for Customer Support lock screen */
+        .slide:first-child .lock-screen {
+            backdrop-filter: blur(2.5px);
+            background: rgba(0, 0, 0, 0.65);
+        }
+
+        .unlock-gif {
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
+        }
+
+        .unlock-gif:hover {
+            transform: scale(1.1);
+        }
+
+        /* Chat Interface Container */
+        .chat-interface {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+            z-index: 2;
+        }
+
+        #logo {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+
+        #voice {
+            width: 150px;
+            margin: 20px 0;
+        }
+
+        #send {
+            width: 150px;
+            margin: 20px 0;
+            display: none;  /* Hidden by default */
+        }
+
+        #btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: #ff3b3b;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        /* Navigation Styles */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 0, 0, 0.2);
+            position: relative;
+            z-index: 3;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff0000;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 55px;
+            align-items: center;
+        }
+
+        .nav-links .home-icon {
+            width: 60px;
+            height: 40px;
+            transition: transform 0.3s ease;
+            filter: invert(1);
+        }
+
+        .nav-links .info-icon {
+            width: 60px;
+            height: 40px;
+            transition: transform 0.3s ease;
+            filter: invert(1);
+        }
+
+        .nav-links .managing-icon {
+            width: 70px;
+            height: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-links .contact-icon {
+            width: 90px;
+            height: 60px;
+            transition: transform 0.3s ease;
+            filter: invert(1);
+        }
+
+        .nav-links img:hover {
+            transform: scale(1.4);
+        }
+
+        .nav-links .home-icon:hover {
+            filter: invert(1) brightness(1);
+        }
+
+        .nav-links .info-icon:hover {
+            filter: invert(1) brightness(0.8);
+        }
+
+        .nav-links .managing-icon:hover {
+            filter: brightness(0.8);
+        }
+
+        .nav-links .contact-icon:hover {
+            filter: brightness(0.8);
+        }
+
+        /* Add styles for stop button */
+        #stopButton {
+            margin-top: 10px;
+            padding: 8px 20px;
+            background-color: #ff3b3b;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 2;
+            margin-left: 10px;
+        }
+
+        #stopButton:hover {
+            background-color: #ff1a1a;
+        }
+
+        /* Update chat interface container */
+        .chat-interface {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+            z-index: 2;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        /* Add styles for language selector */
+        .language-selector {
+            display: flex;
+            gap: 15px;
+            margin: 10px 0;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .language-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .language-option input[type="radio"] {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+            accent-color: #ff3b3b;
+        }
+
+        .user-info {
+            margin: 10px 0;
+            z-index: 2;
+        }
+
+        .user-info input {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Elements -->
+    <div class="geometric-elements"></div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <nav>
+            <div class="logo">
+                <img src="logo.gif" alt="Logo" id="logo">
+            </div>
+            <div class="nav-links">
+                <a href="main.html">
+                    <img src="assets/home.gif" alt="Home" class="home-icon">
+                </a>
+                <a href="information.html">
+                    <img src="assets/information.gif" alt="Information" class="info-icon">
+                </a>
+                <a href="service.html">
+                    <img src="assets/managing.gif" alt="Services" class="managing-icon">
+                </a>
+                <a href="contact.html" class="contact-link">
+                    <img src="assets/contact.gif" alt="Contact" class="contact-icon">
+                </a>
+            </div>
+        </nav>
+        <section class="hero">
+            <div class="overlay-container">
+                <div class="overlay-slider">
+                    
+                    <!-- AI Assistant Slide (Main Chat Interface) -->
+                    <div class="slide">
+                        <div class="chat-interface">
+                            <img src="1.gif" alt="logo" id="logo">
+                            <h1>I'm <span id="name">Mithi</span>,Your <span id="va">Customer Support Assistant</span></h1>
+                            <div class="language-selector">
+                                <label class="language-option">
+                                    <input type="radio" name="language" value="auto" checked>
+                                    Auto Detect
+                                </label>
+                                <label class="language-option">
+                                    <input type="radio" name="language" value="en">
+                                    English
+                                </label>
+                                <label class="language-option">
+                                    <input type="radio" name="language" value="hi">
+                                    Hindi
+                                </label>
+                            </div>
+                            <div class="user-info">
+                                <input type="text" id="mobileNumber" placeholder="Enter Mobile Number" required>
+                            </div>
+                            <img src="voice.gif" alt="voice" id="voice">
+                            <img src="assets/send.gif" alt="send" id="send">
+                            <button id="btn">
+                                <img src="mic.svg" alt="mic">
+                                <span id="content">Click here to talk to me</span>
+                            </button>
+                            <div id="responseText">Response will appear here...</div>
+                            <div class="button-group">
+                                <button id="speakButton">Speak Response</button>
+                                <button id="stopButton">Stop Conversation</button>
+                            </div>
+                            <audio id="audioPlayer"></audio>
+                        </div>
+                    </div>
+
+                    <!-- Modern Design Slide -->
+                    <div class="slide">
+                        <div class="overlay-content">
+                            <h1>Modern Design</h1>
+                            <p>Experience the perfect blend of aesthetics and functionality.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Original Chat Interface Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Add a visual indicator that we're requesting permission
+                responseText.textContent = "Requesting microphone access...";
+                console.log("Requesting microphone permission...");
+
+                // Request microphone permission on page load
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                stream.getTracks().forEach(track => track.stop());
+                
+                // Show success message
+                responseText.textContent = "Microphone access granted! Ready to start.";
+                console.log("Microphone permission granted!");
+                
+                // Visual indicator for button
+                btn.style.border = "2px solid #00b344";
+                
+                if (!recognition) {
+                    initializeSpeechRecognition();
+                }
+            } catch (error) {
+                console.error('Error requesting microphone permission:', error);
+                responseText.textContent = "⚠️ Please allow microphone access to use this feature";
+                btn.style.border = "2px solid #ff3b3b";
+            }
+        });
+
+        const btn = document.getElementById('btn');
+        const content = document.getElementById('content');
+        const responseText = document.getElementById('responseText');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const speakButton = document.getElementById('speakButton');
+        const stopButton = document.getElementById('stopButton');
+
+        // Speech Recognition Setup
+        let recognition = null;
+        let isListening = false;
+
+        // Initialize speech recognition with error handling
+        function initializeSpeechRecognition() {
+            try {
+                window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new window.SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = true;
+                setupRecognitionHandlers();
+                return true;
+            } catch (error) {
+                console.error("Speech recognition not supported:", error);
+                responseText.textContent = "Speech recognition not supported in this browser.";
+                return false;
+            }
+        }
+
+        function setupRecognitionHandlers() {
+            recognition.onstart = () => {
+                isListening = true;
+                btn.style.background = '#00b344';
+                content.textContent = "Listening...";
+                responseText.textContent = "Listening...";
+                document.getElementById('voice').style.display = 'block';
+                document.getElementById('send').style.display = 'none';
+            };
+
+            recognition.onend = () => {
+                isListening = false;
+                btn.style.background = '#ff3b3b';
+                document.getElementById('voice').style.display = 'none';
+                document.getElementById('send').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('send').style.display = 'none';
+                    document.getElementById('voice').style.display = 'block';
+                }, 2300);
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                content.textContent = transcript;
+                
+                // Add stop trigger words check
+                const stopTriggers = [
+                    'stop', 'ok stop', 'please stop', 'band karo', 
+                    'ruko', 'bas', 'enough', 'quit', 'exit', 'end', 
+                    'bye', 'goodbye', 'thank you bye', 'thanks bye',
+                    'बंद करो', 'रुको', 'बस', 'बाय', 'अलविदा', 
+                    'धन्यवाद', 'नमस्ते', 'चलता हूं', 'चलती हूं'
+                ];
+
+                const shouldStop = stopTriggers.some(trigger => 
+                    transcript.toLowerCase().includes(trigger.toLowerCase())
+                );
+
+                if (event.results[0].isFinal) {
+                    if (shouldStop) {
+                        stopListening();
+                        content.textContent = "Goodbye! Click to start new conversation";
+                        btn.style.background = '#ff3b3b';
+                        responseText.textContent = "Conversation ended. Click the mic button to start a new conversation.";
+                        if (audioPlayer) {
+                            audioPlayer.pause();
+                        }
+                    } else {
+                        stopListening();
+                        responseText.textContent = "Processing: " + transcript;
+                        sendToBackend(transcript);
+                    }
+                }
+            };
+
+            recognition.onerror = (event) => {
+                console.error("Recognition error:", event.error);
+                responseText.textContent = "Error: " + event.error;
+                stopListening();
+            };
+        }
+
+        btn.addEventListener('click', () => {
+            if (!recognition) {
+                initializeSpeechRecognition();
+            }
+
+            if (!isListening) {
+                startListening();
+            } else {
+                stopListening();
+            }
+        });
+
+        function startListening() {
+            try {
+                recognition.start();
+            } catch (error) {
+                console.error('Start error:', error);
+                responseText.textContent = "Error starting recognition: " + error.message;
+            }
+        }
+
+        function stopListening() {
+            try {
+                recognition.stop();
+            } catch (error) {
+                console.error('Stop error:', error);
+            }
+        }
+
+        function validateMobileNumber(number) {
+            // Remove any spaces or special characters
+            const cleanNumber = number.replace(/[^0-9]/g, '');
+            return cleanNumber.length === 10;
+        }
+
+        async function sendToBackend(text) {
+            try {
+                const mobileNumber = document.getElementById('mobileNumber').value;
+                
+                // Validate mobile number
+                if (!validateMobileNumber(mobileNumber)) {
+                    responseText.textContent = "Please enter a valid 10-digit mobile number";
+                    return;
+                }
+
+                responseText.textContent = "Sending to backend...";
+                const selectedLanguage = document.querySelector('input[name="language"]:checked').value;
+
+                const response = await fetch('http://localhost:3456/send-text', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        text,
+                        language: selectedLanguage,
+                        name: "Customer",
+                        mobile: mobileNumber.replace(/[^0-9]/g, '') // Send cleaned number
+                    })
+                });
+
+                const data = await response.json();
+                responseText.textContent = data.aiResponse;
+                
+                if (data.audio) {
+                    audioPlayer.src = `data:audio/mp3;base64,${data.audio}`;
+                    await audioPlayer.play();
+                    
+                    const goodbyePhrases = [
+                        'goodbye', 'bye', 'see you', 
+                        'अलविदा', 'बाय', 'फिर मिलेंगे',
+                        'stop', 'ok bye', 'good bye',
+                        'that\'s all', 'thanks bye', 'thank you bye',
+                        'बस', 'रुको', 'बंद करो', 
+                        'चलता हूं', 'चलती हूं',
+                        'stop listening', 'end conversation'
+                    ];
+                    
+                    const isGoodbye = goodbyePhrases.some(phrase => 
+                        data.aiResponse.toLowerCase().includes(phrase.toLowerCase()) ||
+                        text.toLowerCase().includes(phrase.toLowerCase())
+                    );
+
+                    if (!isGoodbye) {
+                        audioPlayer.onended = () => {
+                            setTimeout(() => {
+                                startListening();
+                            }, 100);
+                        };
+                    } else {
+                        content.textContent = "Goodbye! Click to start new conversation";
+                        btn.style.background = '#ff3b3b';
+                        responseText.textContent = "Conversation ended. Click the mic button to start a new conversation.";
+                        stopListening();
+                    }
+                }
+            } catch (error) {
+                responseText.textContent = "Error: " + error.message;
+            }
+        }
+
+        // Add speak button functionality
+        speakButton.addEventListener('click', () => {
+            if (audioPlayer.src) {
+                audioPlayer.play();
+            }
+        });
+
+        // Add stop button functionality
+        stopButton.addEventListener('click', () => {
+            stopListening();
+            audioPlayer.pause();
+            content.textContent = "Goodbye! Click to start new conversation";
+            btn.style.background = '#ff3b3b';
+            responseText.textContent = "Conversation ended. Click the mic button to start a new conversation.";
+        });
+    </script>
+
+    <!-- New UI Scripts -->
+    <script>
+        // Add floating shapes
+        const geometricElements = document.querySelector('.geometric-elements');
+        const screenDiagonal = Math.sqrt(
+            Math.pow(window.innerWidth, 2) + 
+            Math.pow(window.innerHeight, 2)
+        );
+        
+        // Create shapes
+        for (let i = 0; i < 25; i++) {
+            const shape = document.createElement('div');
+            shape.className = 'shape';
+            
+            const baseRadius = screenDiagonal / 3;
+            const randomOffset = Math.random() * 200 - 100;
+            const orbitRadius = baseRadius + (i * 30) + randomOffset;
+            shape.style.setProperty('--orbit-radius', `${orbitRadius}px`);
+            
+            const size = Math.random() * 100 + 30;
+            shape.style.width = size + 'px';
+            shape.style.height = size + 'px';
+            
+            const red = Math.floor(Math.random() * 55) + 200;
+            const green = Math.floor(Math.random() * 30);
+            const blue = Math.floor(Math.random() * 30);
+            shape.style.background = `rgba(${red}, ${green}, ${blue}, 0.4)`;
+            
+            const speed = 15 + Math.random() * 25;
+            shape.style.animationDuration = `${speed}s`;
+            
+            shape.style.animationDelay = `${-Math.random() * 40}s`;
+            
+            const rotationOffset = Math.random() * 360;
+            shape.style.transform = `rotate(${rotationOffset}deg)`;
+            
+            geometricElements.appendChild(shape);
+        }
+
+        // Initialize lock screens
+        function initializeLockScreens() {
+            const slides = document.querySelectorAll('.slide');
+            
+            const lockScreenConfigs = [
+                
+                {
+                    title: 'AI Assistant',
+                    gifPath: 'assets/unlock.gif'
+                }
+            ];
+            
+            slides.forEach((slide, index) => {
+                const lockScreen = document.createElement('div');
+                lockScreen.className = 'lock-screen';
+                
+                const unlockGif = document.createElement('img');
+                unlockGif.src = lockScreenConfigs[index].gifPath;
+                unlockGif.className = 'unlock-gif';
+                unlockGif.alt = `Unlock ${lockScreenConfigs[index].title}`;
+                
+                unlockGif.addEventListener('click', () => {
+                    lockScreen.classList.add('hidden');
+                    setTimeout(() => {
+                        lockScreen.remove();
+                    }, 500);
+                });
+                
+                lockScreen.appendChild(unlockGif);
+                slide.appendChild(lockScreen);
+            });
+        }
+
+        // Initialize UI
+        initializeLockScreens();
+
+        const slider = document.querySelector('.overlay-slider');
+        let currentSlide = 1;
+        let touchDeltaX = 0;
+        let lastDeltaX = 0;
+        let velocityX = 0;
+
+        // Constants for swipe sensitivity
+        const SWIPE_THRESHOLD = 60;
+        const SWIPE_SPRING = 0.15;
+        let isTransitioning = false;
+
+        slider.addEventListener('wheel', e => {
+            e.preventDefault();
+            
+            if (isTransitioning) return;
+            
+            if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+                velocityX = e.deltaX - lastDeltaX;
+                lastDeltaX = e.deltaX;
+                
+                touchDeltaX += e.deltaX * SWIPE_SPRING;
+                
+                requestAnimationFrame(() => {
+                    const progress = Math.min(Math.abs(touchDeltaX) / 200, 1);
+                    const ease = progress * (2 - progress);
+                    
+                    slider.style.transform = `translateX(calc(${-currentSlide * 33.333}% + ${touchDeltaX * ease}px))`;
+                });
+                
+                if (Math.abs(touchDeltaX) > SWIPE_THRESHOLD || Math.abs(velocityX) > 20) {
+                    isTransitioning = true;
+                    if (touchDeltaX > 0 && currentSlide < 1) {
+                        switchSlide(currentSlide + 1);
+                    } else if (touchDeltaX < 0 && currentSlide > 0) {
+                        switchSlide(currentSlide - 1);
+                    }
+                    touchDeltaX = 0;
+                    velocityX = 0;
+                    
+                    setTimeout(() => {
+                        isTransitioning = false;
+                    }, 500);
+                }
+            }
+        }, { passive: false });
+
+        function switchSlide(newSlide) {
+            if (newSlide < 0) newSlide = 1;
+            if (newSlide > 1) newSlide = 0;
+            
+            currentSlide = newSlide;
+            
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach((slide, index) => {
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                    slide.classList.remove('inactive');
+                } else {
+                    slide.classList.add('inactive');
+                    slide.classList.remove('active');
+                }
+            });
+
+            slider.style.transform = `translateX(-${currentSlide * 33.333}%)`;
+        }
+    </script>
+</body>
+</html>

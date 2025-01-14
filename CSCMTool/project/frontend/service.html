@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CypherChaser - Services</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(to bottom, #0B0B2B, #1B1B3A, #2B2B4A);
+            color: white;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Floating circles animation */
+        .floating-circles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .circle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(-50px); }
+            100% { transform: translateY(-100px) translateX(50px); }
+        }
+
+        /* Header styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            width: 150px;
+            height: auto;
+        }
+
+        /* Main content styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3em;
+            margin: 20px 0;
+            color: #fff;
+            text-shadow: 0 0 10px #00f7ff;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 20px #00f7ff;
+        }
+
+        .service-card h2 {
+            color: #fff;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px #00f7ff;
+        }
+
+        .service-card p {
+            color: #fff;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .service-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: #00f7ff;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: rgba(0, 247, 255, 0.1);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            border: 1px solid #00f7ff;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(0, 247, 255, 0.2);
+            box-shadow: 0 0 15px #00f7ff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating circles -->
+    <div class="floating-circles">
+        <div class="circle" style="width: 20px; height: 20px; left: 10%;"></div>
+        <div class="circle" style="width: 30px; height: 30px; left: 30%;"></div>
+        <div class="circle" style="width: 15px; height: 15px; left: 50%;"></div>
+        <div class="circle" style="width: 25px; height: 25px; left: 70%;"></div>
+        <div class="circle" style="width: 35px; height: 35px; left: 90%;"></div>
+    </div>
+
+    <header>
+        <img src="logo.gif" alt="CypherChaser Logo" class="logo">
+        <a href="main.html" class="back-button">Back to Home</a>
+    </header>
+
+    <div class="container">
+        <h1>Our Services</h1>
+
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🤖</div>
+                <h2>Customer Support AI</h2>
+                <p>Powered by OpenAI's GPT-3.5 Turbo, our intelligent customer support system provides instant responses in both English and Hindi with advanced Text-to-Speech capabilities.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">📢</div>
+                <h2>Promotion AI</h2>
+                <p>Automated promotion management using GPT-3.5 Turbo, featuring smart campaign generation and multilingual support for maximum market reach.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🔐</div>
+                <h2>Enhanced Security</h2>
+                <p>Advanced order ID verification system preventing unauthorized access to customer information, ensuring complete data privacy and protection.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🗣️</div>
+                <h2>Multilingual Support</h2>
+                <p>Seamless communication in English and Hindi through advanced Text-to-Speech technology, making interaction natural and accessible.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">⚡</div>
+                <h2>Automation Excellence</h2>
+                <p>Smart automation tools for promotional campaigns, customer engagement, and response management, powered by world's fastest AI model.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">📊</div>
+                <h2>Analytics & Insights</h2>
+                <p>Comprehensive analytics for both customer support and promotional activities, helping optimize performance and engagement.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
